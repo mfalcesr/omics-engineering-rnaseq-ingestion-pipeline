@@ -1,0 +1,21 @@
+# Secrets: never commit real credentials
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Docker volume artefacts / local scratch
+*.log
+
+# Deck build output (the rendered PDF is committed as a portfolio artefact)
+docs/deck.html

@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: rnaseq-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-rnaseq_db}
+      POSTGRES_USER: ${DB_USER:-rnaseq_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-rnaseq_password}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-rnaseq_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
