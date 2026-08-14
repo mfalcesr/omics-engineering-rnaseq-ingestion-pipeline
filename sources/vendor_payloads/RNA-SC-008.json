@@ -1,0 +1,53 @@
+{
+  "_comment": "Single-cell RNA-seq: cell-level QC metrics (n_cells_detected, pct_mito, doublet_rate) instead of RIN, and null TPM (per-cell UMI counts, not bulk TPM).",
+  "api_version": "2.1",
+  "payload_id": "pay_20251219_c4d8e3f1",
+  "generated_at": "2025-12-19T16:45:07Z",
+  "sample": {
+    "vendor_sample_id": "RNA-SC-008",
+    "subject_id": "SUBJ-1044",
+    "study_id": "PRJ-IO-007",
+    "tissue": "tumor_biopsy",
+    "assay_type": "scrna_seq",
+    "library_prep": {
+      "kit": "10x Chromium Next GEM Single Cell 3'",
+      "version": "v3.1",
+      "target_cell_recovery": 5000
+    },
+    "sequencing_batch": "BATCH-2025-Q4-02",
+    "cro": "GenomicsFirst",
+    "qc_metrics": {
+      "total_reads": 401823441,
+      "pct_mapped": 92.3,
+      "n_cells_detected": 4812,
+      "median_genes_per_cell": 2341,
+      "median_umi_per_cell": 8921,
+      "pct_mito": 4.2,
+      "doublet_rate": 0.031
+    },
+    "qc_passed": true,
+    "lab_notes": "10x Chromium library prep. Tissue dissociation 45 min enzymatic at 37C. Viability 92% by trypan blue."
+  },
+  "expression": {
+    "matrix_url": "s3://rnaseq-data/PRJ-IO-007/RNA-SC-008/filtered_feature_bc_matrix.h5",
+    "gene_model": "GRCh38/Ensembl110",
+    "quantification_tool": "Cell Ranger 7.1.0",
+    "inline_vector": [
+      {"gene_id": "ENSG00000141510", "gene_symbol": "TP53",    "raw_counts":  9821, "tpm": null},
+      {"gene_id": "ENSG00000012048", "gene_symbol": "BRCA1",   "raw_counts":   891, "tpm": null},
+      {"gene_id": "ENSG00000139618", "gene_symbol": "BRCA2",   "raw_counts":   456, "tpm": null},
+      {"gene_id": "ENSG00000171862", "gene_symbol": "PTEN",    "raw_counts":  3412, "tpm": null},
+      {"gene_id": "ENSG00000136997", "gene_symbol": "MYC",     "raw_counts": 15821, "tpm": null},
+      {"gene_id": "ENSG00000157764", "gene_symbol": "BRAF",    "raw_counts":  2341, "tpm": null},
+      {"gene_id": "ENSG00000133703", "gene_symbol": "KRAS",    "raw_counts":  4512, "tpm": null},
+      {"gene_id": "ENSG00000213281", "gene_symbol": "NRAS",    "raw_counts":  1891, "tpm": null},
+      {"gene_id": "ENSG00000196839", "gene_symbol": "AKT1",    "raw_counts":  5621, "tpm": null},
+      {"gene_id": "ENSG00000105173", "gene_symbol": "CCNE1",   "raw_counts":  3211, "tpm": null},
+      {"gene_id": "ENSG00000105329", "gene_symbol": "TGFB1",   "raw_counts":  2341, "tpm": null},
+      {"gene_id": "ENSG00000232810", "gene_symbol": "TNF",     "raw_counts":  7891, "tpm": null},
+      {"gene_id": "ENSG00000204287", "gene_symbol": "HLA-DRA", "raw_counts": 18921, "tpm": null},
+      {"gene_id": "ENSG00000168685", "gene_symbol": "IL7R",    "raw_counts":  4521, "tpm": null},
+      {"gene_id": "ENSG00000110324", "gene_symbol": "IL10RA",  "raw_counts":  3891, "tpm": null}
+    ]
+  }
+}

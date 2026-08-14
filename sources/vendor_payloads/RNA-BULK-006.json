@@ -1,0 +1,50 @@
+{
+  "api_version": "2.1",
+  "payload_id": "pay_20251218_a3f9c12d",
+  "generated_at": "2025-12-18T09:14:32Z",
+  "sample": {
+    "vendor_sample_id": "RNA-BULK-006",
+    "subject_id": "SUBJ-1042",
+    "study_id": "PRJ-IO-007",
+    "tissue": "peripheral_blood_mononuclear_cell",
+    "assay_type": "bulk_rnaseq",
+    "library_prep": {
+      "kit": "TruSeq Stranded mRNA",
+      "version": "v3",
+      "strand_specificity": "RF"
+    },
+    "sequencing_batch": "BATCH-2025-Q4-01",
+    "cro": "GenomicsFirst",
+    "qc_metrics": {
+      "total_reads": 52381204,
+      "pct_mapped": 94.7,
+      "rin_score": 8.2,
+      "pct_duplication": 12.3,
+      "median_cv_coverage": 0.41
+    },
+    "qc_passed": true,
+    "lab_notes": "Sample stored at -80C, extracted 2025-12-01. Slight hemolysis noted."
+  },
+  "expression": {
+    "matrix_url": "s3://rnaseq-data/PRJ-IO-007/RNA-BULK-006/expression_matrix.h5",
+    "gene_model": "GRCh38/Ensembl110",
+    "quantification_tool": "STAR+featureCounts v2.2.1",
+    "inline_vector": [
+      {"gene_id": "ENSG00000141510", "gene_symbol": "TP53",    "raw_counts": 1245, "tpm":  48.32},
+      {"gene_id": "ENSG00000012048", "gene_symbol": "BRCA1",   "raw_counts":  312, "tpm":  12.11},
+      {"gene_id": "ENSG00000139618", "gene_symbol": "BRCA2",   "raw_counts":  589, "tpm":  22.84},
+      {"gene_id": "ENSG00000171862", "gene_symbol": "PTEN",    "raw_counts": 1891, "tpm":  73.34},
+      {"gene_id": "ENSG00000136997", "gene_symbol": "MYC",     "raw_counts": 3104, "tpm": 120.41},
+      {"gene_id": "ENSG00000157764", "gene_symbol": "BRAF",    "raw_counts":  723, "tpm":  28.04},
+      {"gene_id": "ENSG00000133703", "gene_symbol": "KRAS",    "raw_counts":  891, "tpm":  34.56},
+      {"gene_id": "ENSG00000213281", "gene_symbol": "NRAS",    "raw_counts":  445, "tpm":  17.26},
+      {"gene_id": "ENSG00000196839", "gene_symbol": "AKT1",    "raw_counts": 2341, "tpm":  90.81},
+      {"gene_id": "ENSG00000105173", "gene_symbol": "CCNE1",   "raw_counts":  667, "tpm":  25.87},
+      {"gene_id": "ENSG00000105329", "gene_symbol": "TGFB1",   "raw_counts": 1123, "tpm":  43.56},
+      {"gene_id": "ENSG00000232810", "gene_symbol": "TNF",     "raw_counts":  234, "tpm":   9.08},
+      {"gene_id": "ENSG00000204287", "gene_symbol": "HLA-DRA", "raw_counts": 4521, "tpm": 175.42},
+      {"gene_id": "ENSG00000168685", "gene_symbol": "IL7R",    "raw_counts":  889, "tpm":  34.49},
+      {"gene_id": "ENSG00000110324", "gene_symbol": "IL10RA",  "raw_counts":  312, "tpm":  12.11}
+    ]
+  }
+}

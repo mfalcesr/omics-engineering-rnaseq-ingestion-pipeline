@@ -1,0 +1,29 @@
+{
+  "_comment": "Intentionally malformed: missing subject_id; total_reads as a string; pct_mapped > 100; unsupported assay_type; negative raw_counts; empty gene_id. Exercises atomic rejection.",
+  "api_version": "2.1",
+  "payload_id": "pay_20251221_zz000001",
+  "generated_at": "2025-12-21T08:00:00Z",
+  "sample": {
+    "vendor_sample_id": "RNA-BULK-009",
+    "study_id": "PRJ-IO-007",
+    "tissue": "whole_blood",
+    "assay_type": "wgs",
+    "sequencing_batch": "BATCH-2025-Q4-02",
+    "cro": "GenomicsFirst",
+    "qc_metrics": {
+      "total_reads": "52381204",
+      "pct_mapped": 105.3,
+      "rin_score": 3.1
+    },
+    "qc_passed": true
+  },
+  "expression": {
+    "matrix_url": "s3://rnaseq-data/PRJ-IO-007/RNA-BULK-009/expression_matrix.h5",
+    "gene_model": "GRCh38/Ensembl110",
+    "quantification_tool": "STAR+featureCounts v2.2.1",
+    "inline_vector": [
+      {"gene_id": "ENSG00000141510", "gene_symbol": "TP53",  "raw_counts": -99,  "tpm": null},
+      {"gene_id": "",                "gene_symbol": "BRCA1", "raw_counts":  312,  "tpm": 12.11}
+    ]
+  }
+}
