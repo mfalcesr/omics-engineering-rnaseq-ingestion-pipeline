@@ -1,0 +1,40 @@
+erDiagram
+    dim_subject          ||--o{ dim_sample : "has"
+    dim_study            ||--o{ dim_sample : "scopes"
+    dim_sample           ||--o{ fct_gene_expression : "measured in"
+    dim_gene             ||--o{ fct_gene_expression : "annotates"
+    dim_sequencing_batch ||--o{ fct_gene_expression : "produced by"
+    dim_date             ||--o{ fct_gene_expression : "on"
+    dim_sample           ||--o{ fct_sample_qc : "qc of"
+    dim_sequencing_batch ||--o{ fct_sample_qc : "produced by"
+    dim_library_prep     ||--o{ fct_sample_qc : "prepped with"
+    dim_date             ||--o{ fct_sample_qc : "on"
+
+    dim_gene {
+      bigint gene_key PK
+      varchar gene_id
+      varchar gene_model_release
+      varchar gene_symbol
+      boolean is_current
+    }
+    fct_gene_expression {
+      bigint sample_key FK
+      bigint gene_key FK
+      bigint batch_key FK
+      bigint raw_counts
+      numeric tpm
+      numeric log2_tpm
+    }
+    fct_sample_qc {
+      bigint sample_key FK
+      bigint batch_key FK
+      numeric pct_mapped
+      numeric rin_score
+      boolean qc_passed
+    }
+    dim_subject {
+      bigint subject_key PK
+      varchar subject_id
+      varchar diagnosis
+      boolean is_current
+    }

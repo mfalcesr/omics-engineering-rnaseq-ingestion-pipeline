@@ -1,0 +1,25 @@
+flowchart LR
+    subgraph Sources
+      V[Vendor seq API<br/>JSON payloads]
+      L[LIMS / Benchling / Veeva]
+      H[(.h5 matrices<br/>FASTQ/BAM)]
+    end
+    subgraph Landing["Landing (immutable)"]
+      OBJ[(Object storage<br/>raw JSON + .h5<br/>partitioned by date)]
+    end
+    subgraph Lakehouse["Lakehouse (Databricks / MS Fabric)"]
+      B[Bronze<br/>raw JSON in Delta/OneLake + payload log]
+      S[Silver<br/>validated · deduped · alias-normalised · vocab]
+      G[Gold<br/>Kimball star = Task 2]
+      M[Marts / OBT / feature tables]
+    end
+    NF[Nextflow / nf-core<br/>secondary analysis]
+    BI[Hex · Posit · Metabase]
+    PG[(Legacy Postgres<br/>existing dashboards)]
+
+    V -->|Task 1 parser| OBJ --> B --> S --> G --> M
+    L -->|Fivetran/Airbyte| B
+    H --> OBJ
+    NF -->|triggered by orchestrator| OBJ
+    M --> BI
+    G -->|reverse-ETL during migration| PG
