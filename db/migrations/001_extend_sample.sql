@@ -62,7 +62,7 @@ FROM sample;
 
 -- NOTE: `sample_expression` intentionally needs NO change. `gene_symbol` from the payload is
 -- deliberately NOT stored here, a gene symbol is annotation, not measurement, and belongs in a
--- `dim_gene` keyed by gene_model release (see docs/task2_gold_model.md). Storing it per-row would
+-- `dim_gene` keyed by gene_model release (see docs/gold_star_schema.md). Storing it per-row would
 -- duplicate mutable annotation across millions of fact rows.
 
 COMMIT;

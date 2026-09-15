@@ -4,11 +4,9 @@ Production-grade ingestion of sequencing-vendor JSON payloads into PostgreSQL: s
 schema evolution, and idempotent loads, with design notes for an analytical star schema and a
 target lakehouse platform.
 
-![CI](https://github.com/mfalcesr/omics-engineering-rnaseq-ingestion-pipeline/actions/workflows/ci.yml/badge.svg)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![License: MIT](https://img.shields.io/badge/license-MIT-green)
-
-> Replace `mfalcesr/omics-engineering-rnaseq-ingestion-pipeline` in the CI badge with your GitHub path after the first push.
+[![CI](https://github.com/mfalcesr/omics-engineering-rnaseq-ingestion-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/mfalcesr/omics-engineering-rnaseq-ingestion-pipeline/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ---
 
@@ -24,8 +22,8 @@ It is deliberately three layers:
 | Layer | What | Status |
 |---|---|---|
 | **Pipeline** | `parse → validate → normalise → load` into PostgreSQL | **Implemented + tested** (25 tests) |
-| **Analytical model** | Kimball star schema for cross-study analysis | Design ([docs/task2_gold_model.md](docs/task2_gold_model.md)) |
-| **Platform** | target lakehouse architecture + migration | Design ([docs/task3_architecture.md](docs/task3_architecture.md)) |
+| **Analytical model** | Kimball star schema for cross-study analysis | Design ([docs/gold_star_schema.md](docs/gold_star_schema.md)) |
+| **Platform** | target lakehouse architecture + migration | Design ([docs/target_platform.md](docs/target_platform.md)) |
 
 ---
 
@@ -69,14 +67,14 @@ opens a transaction.
 `fct_gene_expression` (one row per sample x gene) and `fct_sample_qc` (one row per sample), so a
 quality query never scans the huge expression fact. `dim_gene` is versioned by gene-model release,
 because expression is only comparable within one annotation version. Full write-up in
-[docs/task2_gold_model.md](docs/task2_gold_model.md).
+[docs/gold_star_schema.md](docs/gold_star_schema.md).
 
 ![Analytical star schema](docs/images/task2_erd.png)
 
 **Target platform.** A medallion lakehouse (Databricks or Microsoft Fabric) with an immutable raw
 landing zone, a reverse-ETL sync back to the legacy database so existing dashboards survive migration,
 and Nextflow kept for bioinformatics rather than rebuilt. Full write-up in
-[docs/task3_architecture.md](docs/task3_architecture.md).
+[docs/target_platform.md](docs/target_platform.md).
 
 ![Target platform architecture](docs/images/task3_architecture.png)
 
@@ -85,7 +83,7 @@ and Nextflow kept for bioinformatics rather than rebuilt. Full write-up in
 ## Prerequisites
 
 - Docker Desktop 20+ (`docker compose version`)
-- Python 3.10+ (`py --version` on Windows, `python3 --version` elsewhere)
+- Python 3.10+ (`python3 --version`; on Windows `py --version`)
 
 ---
 
@@ -99,15 +97,17 @@ docker compose up -d
 # 2. Apply the additive, idempotent migration (safe to run repeatedly)
 docker exec -i rnaseq-postgres psql -U rnaseq_user -d rnaseq_db < db/migrations/001_extend_sample.sql
 
-# 3. Install (Windows: use `py`; elsewhere `python3`)
-py -m venv .venv
-.venv/Scripts/pip install -e ".[dev]"      # Linux/macOS: .venv/bin/pip
+# 3. Install
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
 
 # 4. Ingest every fixture
-.venv/Scripts/ingest load-dir sources/vendor_payloads --console
+.venv/bin/ingest load-dir sources/vendor_payloads --console
 #   ...or one payload:
-.venv/Scripts/ingest load-payload sources/vendor_payloads/RNA-BULK-006.json --console
+.venv/bin/ingest load-payload sources/vendor_payloads/RNA-BULK-006.json --console
 ```
+
+On Windows, use `py -m venv .venv` and the `.venv\Scripts\` path in place of `.venv/bin/`.
 
 **Entry point:** `ingest load-payload <file>` / `ingest load-dir <dir>`. Exit code is non-zero if any
 payload is rejected, so CI and orchestrators can detect failure. `--json-logs` (default) emits
@@ -143,8 +143,8 @@ The malformed payload leaves the database byte-identical apart from one `rejecte
 ## Tests
 
 ```bash
-.venv/Scripts/pytest -m "not integration"   # 17 unit tests, no database
-.venv/Scripts/pytest                        # full suite, 25 tests, needs Docker up
+.venv/bin/pytest -m "not integration"   # 17 unit tests, no database
+.venv/bin/pytest                        # full suite, 25 tests, needs Docker up
 ```
 
 - **`test_parse.py`** parsing/normalisation, alias mapping, tool/version split, single-cell null TPM.
@@ -173,7 +173,7 @@ The malformed payload leaves the database byte-identical apart from one `rejecte
 │  ├─ load.py          # transaction, upsert-if-newer, expression swap, payload log
 │  └─ cli.py           # `ingest load-payload` / `load-dir`
 ├─ tests/              # conftest (DB reset fixture) + unit + integration
-└─ docs/               # DECISIONS.md, task2_gold_model.md, task3_architecture.md, deck.md/pdf
+└─ docs/               # DECISIONS.md, gold_star_schema.md, target_platform.md, deck.md/pdf
 ```
 
 ---
@@ -181,9 +181,9 @@ The malformed payload leaves the database byte-identical apart from one `rejecte
 ## Design docs
 
 - **[docs/DECISIONS.md](docs/DECISIONS.md)** every trade-off as "chose X over Y because Z".
-- **[docs/task2_gold_model.md](docs/task2_gold_model.md)** the analytical star schema (grain, SCD,
+- **[docs/gold_star_schema.md](docs/gold_star_schema.md)** the analytical star schema (grain, SCD,
   example queries, ER diagram).
-- **[docs/task3_architecture.md](docs/task3_architecture.md)** target platform (lakehouse picks,
+- **[docs/target_platform.md](docs/target_platform.md)** target platform (lakehouse picks,
   migration, governance).
 - **[docs/deck.md](docs/deck.md)** a short overview deck (Marp). Export: `npx @marp-team/marp-cli docs/deck.md --pdf`.
 
