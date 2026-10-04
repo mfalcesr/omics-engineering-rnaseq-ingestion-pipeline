@@ -31,7 +31,12 @@ jobs:
           --health-retries 5
 
     env:
+      # The loader's connection: owns every write, used by the ingest integration tests.
       DATABASE_URL: postgresql://rnaseq_user:rnaseq_password@localhost:5432/rnaseq_db
+      # The API's connection: SELECT-only role created by migration 002. A throwaway
+      # password is fine here; it never leaves the ephemeral CI database.
+      API_DB_PASSWORD: ci-only-password
+      API_DATABASE_URL: postgresql://rnaseq_api:ci-only-password@localhost:5432/rnaseq_db
 
     steps:
       - uses: actions/checkout@v4
@@ -41,16 +46,28 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install package + dev dependencies
+      - name: Install package + API and dev dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+          pip install -e ".[api,dev]"
+
+      - name: Lint
+        run: ruff check .
 
       - name: Install PostgreSQL client
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
 
       - name: Load base schema
         run: psql "$DATABASE_URL" -f db/init.sql
+
+      # Both migrations are additive and idempotent. 001 is also applied by the `db` test
+      # fixture, but 002 must run through psql: it uses psql variables (`-v api_pw`) so the
+      # role password is never written into the repository.
+      - name: Apply migrations
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/migrations/001_extend_sample.sql
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -v api_pw="$API_DB_PASSWORD" \
+            -f db/migrations/002_api_readonly_role.sql
 
       - name: Run unit tests (no database)
         run: pytest -m "not integration" -q

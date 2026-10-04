@@ -17,8 +17,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# The read API is an extra so `pip install rnaseq-ingest` stays lean for CLI-only users.
+api = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "psycopg-pool>=3.2",
+]
 dev = [
     "pytest>=8.0",
+    "httpx>=0.27",
+    "ruff>=0.6",
 ]
 
 [project.scripts]
@@ -36,3 +44,11 @@ markers = [
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+
+[tool.ruff.lint]
+# Pinned explicitly rather than left implicit. These are ruff's own defaults (pyflakes plus
+# the pycodestyle errors that matter), but writing them down means a future ruff release
+# widening its default set cannot turn CI red without a deliberate change here.
+# E501 is intentionally absent: line length is a formatting concern, and `line-length` above
+# already governs `ruff format`.
+select = ["E4", "E7", "E9", "F"]
